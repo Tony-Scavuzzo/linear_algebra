@@ -13,9 +13,12 @@ def clean_row(vector_input):
 
 def matrix_maker():
     #this function interactively sets up a matrix
+    #currently, this function does error checking for positive values, but it crashes for non ints
     #here, the dimensionality is established
     dimensions_done = False
     while(dimensions_done == False):
+
+        #formats the dimensions
         dimension_string = input("   What is the dimensionality of your matrix?\n   Enter as <#rows>,<#columns>.\n>")
         dimensions = dimension_string.split(",")
         if len(dimensions) == 2:
@@ -23,11 +26,15 @@ def matrix_maker():
             while i < 2:
                 dimensions[i] = int(dimensions[i].strip())
                 i = i + 1
-            dimensions_done = True
+
+            #checks the dimensions for sanity
+            if dimensions[0] > 0 and dimensions[1] > 0:
+                dimensions_done = True
+            else:
+                print("   A matrix's dimensions must be positive - try again")
         else:
-            print("A matrix has two dimensions - try again")
-        
-    
+            print("   A matrix has two dimensions - try again")
+
     #here, the rows of the matrix are input one at a time
     matrix = []
     while len(matrix) < dimensions[0]:
@@ -196,9 +203,13 @@ def matrix_matrix_multiply(matrix1, matrix2):
      
 def find_angle(vector1, vector2):
     #finds the angle of two vectors in radians
-    #this uses a cross product in the form of vector multiplication
-    Tvector2 = transpose(vector2)
-    return(math.acos(matrix_matrix_multiply(vector1,Tvector2)[0][0]/(magnitude(vector1) * magnitude(Tvector2))))
+    #returns None in the if either vector is the zero vector
+    #this uses a dot product in the form of vector multiplication
+    if magnitude(vector1) != 0 and magnitude(vector2) != 0:
+        Tvector2 = transpose(vector2)
+        return(math.acos(matrix_matrix_multiply(vector1,Tvector2)[0][0]/(magnitude(vector1) * magnitude(Tvector2))))
+    else:
+        return(None)
 
 def cross_product(vector1, vector2):
     #returns the cross product of two vectors
@@ -333,9 +344,12 @@ while True:
         vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
         if len(vector1[0]) == len(vector2[0]):
             answer = find_angle(vector1, vector2)
-            if degree_switch == True:
-                answer = answer/math.pi*180
-            output(f"The angle between vector 1 and vector 2 is {answer}.")
+            if answer != None:
+                if degree_switch == True:
+                    answer = answer/math.pi*180
+                output(f"The angle between vector 1 and vector 2 is {answer}.")
+            else:
+                output("The angle of any vector with the zero vector is not defined")
         else:
             output("The angle between two vectors is only defined if they have the same number of elements")
         
