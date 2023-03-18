@@ -321,7 +321,7 @@ while True:
     if degree_switch == True:
         print('\n   you are currently working in degrees. To switch to radians, enter "r."')
     else:
-        print('\n   you are currently working in radians. To switch to degrees, enter "r."')
+        print('\n   you are currently working in radians. To switch to degrees, enter "d."')
 
     #User input and response
     choice = input(">")
@@ -405,19 +405,25 @@ while True:
     elif choice == "8":
         #determinant solver
         
-        matrix = square_matrix_maker()
-        
-        #formats answer
-        answer = "the determinant of\n"
-        for row in matrix:
-            answer = answer + "   " + str(row) + "\n"
-        answer = answer + f"   is {determinant_solver(matrix)}"
-        output(answer)
-    
+        matrix = matrix_maker()
+        dimensions = get_dimensions(matrix)
+
+        if dimensions[0] == dimensions[1]:
+            #formats answer
+            answer = "the determinant of\n"
+            for row in matrix:
+                answer = answer + "   " + str(row) + "\n"
+            answer = answer + f"   is {determinant_solver(matrix)}"
+            output(answer)
+
+        else:
+            output("Determinants are only defined for square matrices.")
+
     elif choice == "-1":
         print("   This is the current test code.\n   If you are running this code, you should already know what it does.")
         matrix1 = matrix_maker()
         print(matrix_printer(transpose(matrix1)))
+    
     elif choice == "r":
         degree_switch = False
     
