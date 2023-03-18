@@ -1,35 +1,15 @@
 import math
 
 #these functions are general purpose for this code
-def get_dimensions(matrix):
-    #returns a tuple describing the dimensionality of a matrix
-    return(len(matrix),len(matrix[0]))
-
-def is_vector(matrix):
-    #determines if a matrix is a vector and if it is a vector, what type ("row" or "column")
-    #Returns a tuple of the form (bool, "type")
-    dimensions = get_dimensions(matrix)
-
-    if dimensions[0] == 1:
-        return (True, "row")
-
-    elif dimensions[1] == 1:
-        return (True, "column")
-
-    else:
-        return (False, None)
-
-def is_square_matrix(matrix):
-    #determines if a matrix is a square matrix and if it is, what the dimensionality is
-    #returns a tuple of the form (bool, dimensions)
-
-    dimensions = get_dimensions(matrix)
-
-    if dimensions[0] == dimensions[1]:
-        return (True, dimensions[0])
-
-    else:
-        return (False, None)
+def clean_row(vector_input):
+    #this function takes a user input vector as a comma seperated string and converts it to a list while cleaning spaces.
+    #when this is used to create a row vector, ensure that it is initialized inside a set of brackets to format it as a vector/matrix
+    vector = vector_input.split(",")
+    i = 0
+    while i < len(vector):
+        vector[i] = float(vector[i].strip())
+        i = i + 1
+    return vector
 
 def matrix_maker():
     #this function interactively sets up a matrix
@@ -51,7 +31,7 @@ def matrix_maker():
     #here, the rows of the matrix are input one at a time
     matrix = []
     while len(matrix) < dimensions[0]:
-        row = clean_vector(input(f"   Input the values for row {len(matrix)+1} as a comma seperated list without brackets.\n>"))
+        row = clean_row(input(f"   Input the values for row {len(matrix)+1} as a comma seperated list without brackets.\n>"))
         if len(row) == dimensions[1]:
             matrix.append(row)
         else:
@@ -59,33 +39,9 @@ def matrix_maker():
     
     return matrix
 
-""" def square_matrix_maker():
-    #this function has been depreciated because I have generalized to matrix_maker()
-    #this function interactively sets up a square mat1rix
-    order = int(input("   What is the size of your square matrix?\n   Enter an integer.\n>"))
-    matrix = []
-    while len(matrix) < order:
-        row = clean_vector(input(f"   Input the values for row {len(matrix)+1} as a comma seperated list without brackets.\n>"))
-        if len(row) == order:
-            matrix.append(row)
-        else:
-            print("Row was not the expected size. Try again")
-    return(matrix) """
-
-def clean_vector(vector_input):
-    #this function takes a user input vector as a comma seperated string and converts it to a list while cleaning spaces.
-    vector = vector_input.split(",")
-    i = 0
-    while i < len(vector):
-        vector[i] = float(vector[i].strip())
-        i = i + 1
-    return vector
-
-def check_vector_dim(vector1, vector2):
-    #this function returns an error if two given vectors are of different dimension
-    if len(vector1) != len(vector2):
-        print("   Error: This operation is only defined for two vectors of equal order.")
-        exit()
+def get_dimensions(matrix):
+    #returns a tuple describing the dimensionality of a matrix
+    return(len(matrix),len(matrix[0]))
 
 def matrix_printer(matrix):
     #formats a matrix as a string with line jumps
@@ -159,20 +115,21 @@ def distributive(list1):
         i = i + 1
     return(new_list)
 
-#these functions are, thus far, merely subsets of the cross product function.
-def index_loop(index, max):
-    while index > max - 1:
-        index = index - max
-    return index
-
 #and these are the functions that you find as options in the menu
 def magnitude(vector):
     #finds the magnitude of a vector
-    sum_of_squares= 0
-    for element in vector:
-        sum_of_squares = sum_of_squares + element * element
-    return math.sqrt(sum_of_squares)
+    dimensions = get_dimensions(vector)
+    sum_of_squares = 0
 
+    if dimensions[0] == 1:
+        for element in vector[0]:
+            sum_of_squares = sum_of_squares + element * element
+    elif dimensions[1] == 1:
+        for element in vector:
+            sum_of_squares = sum_of_squares + element[0] * element[0]
+    
+    return math.sqrt(sum_of_squares)
+        
 def transpose(matrix):
     dimensions = get_dimensions(matrix)
     new_matrix = []
@@ -215,6 +172,8 @@ def scalar_matrix_multiply(scalar, matrix):
     return(new_matrix)
 
 def matrix_matrix_multiply(matrix1, matrix2):
+    #multiplies two matrices
+    #note that this is used whenever dot products are desired
     dimensions1 = get_dimensions(matrix1)
     dimensions2 = get_dimensions(matrix2)
     new_matrix = []
@@ -234,36 +193,23 @@ def matrix_matrix_multiply(matrix1, matrix2):
             j = j + 1
         i = i + 1
     return(new_matrix)
-
-def dot_product(vector1, vector2):
-    #finds the dot product of two vectors
-    dot_product_sum = 0
-    i = 0
-    while i < len(vector1):
-        dot_product_sum = dot_product_sum + vector1[i]*vector2[i]
-        i = i + 1
-    return(dot_product_sum)
-        
+     
 def find_angle(vector1, vector2):
     #finds the angle of two vectors in radians
-    return(math.acos(dot_product(vector1, vector2)/(magnitude(vector1)*magnitude(vector2))))
+    #this uses a cross product in the form of vector multiplication
+    Tvector2 = transpose(vector2)
+    return(math.acos(matrix_matrix_multiply(vector1,Tvector2)[0][0]/(magnitude(vector1) * magnitude(Tvector2))))
 
 def cross_product(vector1, vector2):
     #returns the cross product of two vectors
     #if the vectors are not in 3D space, returns None
+    #there's probably a more general way to code this, but the cross product can't be generalized, so I won't worry about it
 
-    #creates empty cross product vector with same order as inputs
-    order = len(vector1)
-    if order == 3:
-        cross_vector = []
-        while len(cross_vector) < order:
-            cross_vector.append("")
-        
-        #populates the cross vector
-        i = 0
-        while i < len(cross_vector):
-            cross_vector[i] = vector1[index_loop(i+1, order)]*vector2[index_loop(i+2, order)] - vector1[index_loop(i+2, order)]*vector2[index_loop(i+1, order)]
-            i = i + 1    
+    if len(vector1[0]) == 3 and len(vector2[0]) == 3:
+        cross_vector = [[]]
+        cross_vector[0].append(vector1[0][1] * vector2[0][2] - vector1[0][2] * vector2[0][1])
+        cross_vector[0].append(vector1[0][2] * vector2[0][0] - vector1[0][0] * vector2[0][2])
+        cross_vector[0].append(vector1[0][0] * vector2[0][1] - vector1[0][1] * vector2[0][0])
         return(cross_vector)
     else:
         return(None)
@@ -331,7 +277,7 @@ while True:
 
     elif choice == "1":
         #vector magnitude
-        vector = clean_vector(input("   Input a vector as a comma seperated list without brackets:\n>"))
+        vector = [clean_row(input("   Input a vector as a comma seperated list without brackets:\n>"))]
         output(f"The magnitude of {vector} is {magnitude(vector)}.")
 
     elif choice == "2":
@@ -383,19 +329,20 @@ while True:
 
     elif choice == "6":
         #angle of two vectors
-        vector1 = clean_vector(input("   Input vector 1 as a comma seperated list without brackets:\n>"))
-        vector2 = clean_vector(input("   Input vector 2 as a comma seperated list without brackets:\n>"))
-        check_vector_dim(vector1,vector2)
-        answer = find_angle(vector1, vector2)
-        if degree_switch == True:
-            answer = answer/math.pi*180
-        output(f"The angle between vector 1 and vector 2 is {answer}.")
+        vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+        vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
+        if len(vector1[0]) == len(vector2[0]):
+            answer = find_angle(vector1, vector2)
+            if degree_switch == True:
+                answer = answer/math.pi*180
+            output(f"The angle between vector 1 and vector 2 is {answer}.")
+        else:
+            output("The angle between two vectors is only defined if they have the same number of elements")
         
     elif choice == "7":
         #cross product
-        vector1 = clean_vector(input("   Input vector 1 as a comma seperated list without brackets:\n>"))
-        vector2 = clean_vector(input("   Input vector 2 as a comma seperated list without brackets:\n>"))
-        check_vector_dim(vector1,vector2)
+        vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+        vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
         answer = cross_product(vector1, vector2)
         if answer == None:
             output("Error: The cross product is only defined in three dimensional space")
