@@ -73,12 +73,74 @@ def output(string):
     print("   " + string)
     print("   ********************************************************************************\n")
 
+#These functions are used for the row echelon function(s)
+def num_zeros(row):
+    i = 0
+    still_zero = True
+    while still_zero == True and i < len(row):
+        if row[i] == 0:
+            i = i + 1
+        else:
+            still_zero = False
+    return(i)
+
+def row_multiply(row, scalar):
+    #for multiplying a row of a matrix - not the same as scalar_matrix_multiply due to different number of brackets
+    new_row = []
+    i = 0
+    while i < len(row):
+        new_row.append(row[i] * scalar)
+        i = i + 1
+    return(new_row)
+
+def clean_negs(row):
+    #multiplies a row by -1 if the leading nonzero term is negative
+    i = num_zeros(row)
+    if i < len(row):
+        if row[i] < 0:
+            row = row_multiply(row, -1)
+    return(row)
+
+def row_echelon(matrix):
+    #This function converts a matrix to row echelon form
+    dimensions = get_dimensions(matrix)
+    
+    #cleans possible leading negative values, then sorts matrix
+    i = 0
+    while i < dimensions[0]:
+        matrix[i] = clean_negs(matrix[i])
+        i = i + 1
+    matrix.sort(reverse = True)
+
+    #subtracts row i from row i-1 after multiplying both to least common multiple of first element
+    #this changes the leading element of row i to a 0
+    #does not change row i-1
+    i = 1
+    while i < dimensions[0]:
+        while (num_zeros(matrix[i-1]) == num_zeros(matrix[i])):
+            j = num_zeros(matrix[i])
+            coefficients = (matrix[i-1][j],matrix[i][j])
+            k = 0
+            while k < dimensions[1]:
+                matrix[i][k] = matrix[i][k] * coefficients[0] - matrix[i-1][k] * coefficients[1]
+                k = k + 1
+
+            #cleans possible leading negatives, then resorts matrix
+            matrix[i] = clean_negs(matrix[i])
+            matrix.sort(reverse = True)
+        matrix.sort(reverse = True)
+        i = i + 1
+
+    return(matrix)
+
 #These functions are, thus far, merely subsets of the determinant solver
 def two_by_two_det(matrix):
     #this function finds the determinant of a 2x2 matrix
     return(matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1])
 
 def det_decomp(matrix):
+    #TODO: incorporate row_multiply
+
     #this function takes an [nxn] determinant as an argument
     #and simplifies it to c1[n-1xn-1]-c2[n-1,n-1]+c3[n-1,n-1]-c4[n-1,n-1]...cn[n-1,n-1]
     #it returns a list of n 2 element sublists where the first element is cn and the second element is [n-1,n-1]
@@ -166,6 +228,8 @@ def matrix_add(matrix1, matrix2):
     return matrix_sum
 
 def scalar_matrix_multiply(scalar, matrix):
+    #TODO: incorporate row_multiply
+
     dimensions = get_dimensions(matrix)
     i = 0
     new_matrix = []
@@ -263,6 +327,44 @@ def determinant_solver(determinant):
         i = i + 1
     return(final_sum)
  
+def red_row_echelon(matrix):
+    dimensions = get_dimensions(matrix)
+    matrix = row_echelon(matrix)
+    
+    #finds horizontal indices of pivot points
+    pivots = []
+    for row in matrix:
+        pivots.append(num_zeros(row))
+
+    #pivot_number refers to which pivot point
+    #pivot number 0 is skipped because there are no values above it
+    pivot_number = 1
+    while pivot_number < len(pivots) and pivots[pivot_number] < dimensions[0]:
+        #i refers to what row number being modified
+        i = 0
+        while i < pivot_number:
+            coefficients = (matrix[i][pivots[pivot_number]], matrix[pivot_number][pivots[pivot_number]])
+            #j refers to the element within the row
+            j = 0
+            while j < dimensions[1]:
+                matrix[i][j] = matrix[i][j] * coefficients[1] - matrix[pivot_number][j] * coefficients[0]
+                j = j + 1
+            i = i + 1
+        pivot_number = pivot_number + 1
+
+    #divides each row by the leading non-zero term
+    #TODO: sometimes this doesn't work. I don't know why.
+    #Specifically, I know [[1,2,3,4,5],[1,2,-3,4-5]] doesn't reduce down.
+    #it's right - it just doesn't have a leading 1
+    i = 0
+    while i < dimensions[0] and num_zeros(matrix[i]) < dimensions[0]:
+        factor = 1/matrix[i][num_zeros(matrix[i])]
+        matrix[i] = row_multiply(matrix[i], factor)
+        i = i + 1
+
+    return(matrix)
+    
+
 #this flag is for working in degrees rather than radians 
 degree_switch = True
 
@@ -273,7 +375,7 @@ while True:
 
     #interactive text, includuing menu
     print("   Please select an operation from the following menu by typing a number and pressing enter.")
-    print("   0: exit\n   1: vector magnitude\n   2: matrix transpose\n   3: matrix addition\n   4: multiply matrix by scalar\n   5: multiply matrix by matrix\n   6: find angle between vectors\n   7: cross product\n   8: matrix determinant\n   -1: test code")  
+    print("   0: exit\n   1: vector magnitude\n   2: matrix transpose\n   3: matrix addition\n   4: multiply matrix by scalar\n   5: multiply matrix by matrix\n   6: find angle between vectors\n   7: cross product\n   8: matrix determinant\n   9: reduced row echelon")  
     #changes menu to reflect degrees/radians
     if degree_switch == True:
         print('\n   you are currently working in degrees. To switch to radians, enter "r."')
@@ -380,11 +482,18 @@ while True:
         else:
             output("Determinants are only defined for square matrices.")
 
+    elif choice == "9":
+        matrix = matrix_maker()
+        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(red_row_echelon(matrix))}")
+
     elif choice == "-1":
-        print("   This is the current test code.\n   If you are running this code, you should already know what it does.")
-        matrix1 = matrix_maker()
-        print(matrix_printer(transpose(matrix1)))
-    
+        matrix = [[1,-2,0,1],[0,-3,2,3],[2,0,-4,2]]
+        print(matrix_printer(matrix))
+        matrix = row_echelon(matrix)
+        print(matrix_printer(matrix))
+        matrix = red_row_echelon(matrix)
+        print(matrix_printer(matrix))
+
     elif choice == "r":
         degree_switch = False
     
