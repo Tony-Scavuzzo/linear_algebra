@@ -4,6 +4,7 @@ import math
 def clean_row(vector_input):
     #this function takes a user input vector as a comma seperated string and converts it to a list while cleaning spaces.
     #when this is used to create a row vector, ensure that it is initialized inside a set of brackets to format it as a vector/matrix
+    #TODO: error handling and pass "" to main
     vector = vector_input.split(",")
     i = 0
     while i < len(vector):
@@ -13,7 +14,8 @@ def clean_row(vector_input):
 
 def matrix_maker():
     #this function interactively sets up a matrix
-    #currently, this function does error checking for positive values, but it crashes for non ints
+    #currently, this function does error checking for positive values
+    #TODO: error handling for nonints, empty string passes to main
     #here, the dimensionality is established
     dimensions_done = False
     while(dimensions_done == False):
@@ -186,6 +188,7 @@ def distributive(list1):
 #and these are the functions that you find as options in the menu
 def magnitude(vector):
     #finds the magnitude of a vector
+    #TODO error handling, empty string pass to main
     dimensions = get_dimensions(vector)
     sum_of_squares = 0
 
@@ -228,6 +231,7 @@ def matrix_add(matrix1, matrix2):
 
 def scalar_matrix_multiply(scalar, matrix):
     #TODO: incorporate row_multiply
+    #TODO: error handling for scalar
 
     dimensions = get_dimensions(matrix)
     i = 0
@@ -277,7 +281,7 @@ def find_angle(vector1, vector2):
 def cross_product(vector1, vector2):
     #returns the cross product of two vectors
     #if the vectors are not in 3D space, returns None
-    #there's probably a more general way to code this, but the cross product can't be generalized, so I won't worry about it
+    #there's probably a cooler way to code this, but the cross product can't be generalized, so I won't worry about it
 
     if len(vector1[0]) == 3 and len(vector2[0]) == 3:
         cross_vector = [[]]
@@ -290,6 +294,7 @@ def cross_product(vector1, vector2):
 
 def determinant_solver(determinant):
     #finds the determinant of a square matrix
+    #TODO: Error handling for 1x1 matrix
 
     #sets up the initial sum
     total = [[1, determinant]]
