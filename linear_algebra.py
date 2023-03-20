@@ -101,7 +101,7 @@ def clean_negs(row):
             row = row_multiply(row, -1)
     return(row)
 
-def row_echelon(matrix):
+def ref(matrix):
     #This function converts a matrix to row echelon form
     dimensions = get_dimensions(matrix)
     
@@ -117,7 +117,7 @@ def row_echelon(matrix):
     #does not change row i-1
     i = 1
     while i < dimensions[0]:
-        while (num_zeros(matrix[i-1]) == num_zeros(matrix[i])):
+        while (num_zeros(matrix[i-1]) == num_zeros(matrix[i]) and num_zeros(matrix[i]) < dimensions[1]):
             j = num_zeros(matrix[i])
             coefficients = (matrix[i-1][j],matrix[i][j])
             k = 0
@@ -128,7 +128,6 @@ def row_echelon(matrix):
             #cleans possible leading negatives, then resorts matrix
             matrix[i] = clean_negs(matrix[i])
             matrix.sort(reverse = True)
-        matrix.sort(reverse = True)
         i = i + 1
 
     return(matrix)
@@ -326,15 +325,16 @@ def determinant_solver(determinant):
         final_sum = final_sum + total[i]
         i = i + 1
     return(final_sum)
- 
-def red_row_echelon(matrix):
+
+def rref(matrix):
     dimensions = get_dimensions(matrix)
-    matrix = row_echelon(matrix)
-    
+    matrix = ref(matrix)
+
     #finds horizontal indices of pivot points
     pivots = []
     for row in matrix:
-        pivots.append(num_zeros(row))
+        if num_zeros(row) < dimensions[1]:
+            pivots.append(num_zeros(row))
 
     #pivot_number refers to which pivot point
     #pivot number 0 is skipped because there are no values above it
@@ -352,6 +352,7 @@ def red_row_echelon(matrix):
             i = i + 1
         pivot_number = pivot_number + 1
 
+
     #divides each row by the leading non-zero term
     i = 0
     while i < dimensions[0] and num_zeros(matrix[i]) < dimensions[1]:
@@ -360,7 +361,6 @@ def red_row_echelon(matrix):
         i = i + 1
 
     return(matrix)
-    
 
 #this flag is for working in degrees rather than radians 
 degree_switch = True
@@ -481,15 +481,11 @@ while True:
 
     elif choice == "9":
         matrix = matrix_maker()
-        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(red_row_echelon(matrix))}")
+        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(rref(matrix))}")
 
     elif choice == "-1":
-        matrix = [[1,-2,0,1],[0,-3,2,3],[2,0,-4,2]]
-        print(matrix_printer(matrix))
-        matrix = row_echelon(matrix)
-        print(matrix_printer(matrix))
-        matrix = red_row_echelon(matrix)
-        print(matrix_printer(matrix))
+        matrix = matrix_maker()
+        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(red_row_echelon_TS(matrix))}")
 
     elif choice == "r":
         degree_switch = False
