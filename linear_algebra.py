@@ -353,11 +353,8 @@ def red_row_echelon(matrix):
         pivot_number = pivot_number + 1
 
     #divides each row by the leading non-zero term
-    #TODO: sometimes this doesn't work. I don't know why.
-    #Specifically, I know [[1,2,3,4,5],[1,2,-3,4-5]] doesn't reduce down.
-    #it's right - it just doesn't have a leading 1
     i = 0
-    while i < dimensions[0] and num_zeros(matrix[i]) < dimensions[0]:
+    while i < dimensions[0] and num_zeros(matrix[i]) < dimensions[1]:
         factor = 1/matrix[i][num_zeros(matrix[i])]
         matrix[i] = row_multiply(matrix[i], factor)
         i = i + 1
