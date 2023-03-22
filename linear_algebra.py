@@ -367,134 +367,194 @@ def rref(matrix):
 
     return(matrix)
 
-#this flag is for working in degrees rather than radians 
+#flags for various states
 degree_switch = True
+info = False
+state = "main menu"
 
 print("   Welcome to the interactive linear algebra application!")
 
 #interactive session
 while True:
 
-    #interactive text, includuing menu
-    print("   Please select an operation from the following menu by typing a number and pressing enter.")
-    print("   0: exit\n   1: vector magnitude\n   2: matrix transpose\n   3: matrix addition\n   4: multiply matrix by scalar\n   5: multiply matrix by matrix\n   6: find angle between vectors\n   7: cross product\n   8: matrix determinant\n   9: reduced row echelon")  
-    #changes menu to reflect degrees/radians
-    if degree_switch == True:
-        print('\n   you are currently working in degrees. To switch to radians, enter "r."')
-    else:
-        print('\n   you are currently working in radians. To switch to degrees, enter "d."')
-
-    #User input and response
-    choice = input(">")
-    
-    if choice == "0":
-        exit()
-
-    elif choice == "1":
-        #vector magnitude
-        vector = [clean_row(input("   Input a vector as a comma seperated list without brackets:\n>"))]
-        output(f"The magnitude of {vector} is {magnitude(vector)}.")
-
-    elif choice == "2":
-        matrix = matrix_maker()
-        output(f"The transpose of\n{matrix_printer(matrix)}   is\n{matrix_printer(transpose(matrix))}")
-
-    elif choice == "3":
-        #add matrices
-        print("   For matrix 1:")
-        matrix1 = matrix_maker()
-        print("   for matrix 2:")
-        matrix2 = matrix_maker()
-        
-        if get_dimensions(matrix1) == get_dimensions(matrix2):
-            output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 + M2 =\n{matrix_printer(matrix_add(matrix1,matrix2))}")
+    if state == "main menu":
+        #interactive text of the menu
+        print("   Please select an option from the following menu by typing a number and pressing enter.\n")
+        print("   0: exit\n   1: vector operations\n   2: matrix operations\n")
+        #changes menu to reflect flags
+        if degree_switch == True:
+            print('   You are currently working in degrees. To switch to radians, enter "a".')
         else:
-            output("Matrix addition is not supported for matrices of different dimensionality")
-        #print(matrix_add(matrix1,matrix2))
-        #print(matrix_printer(matrix_add(matrix1,matrix2)))
-        
-    elif choice == "4":
-        #multiply matrix by scalar
-        matrix = matrix_maker()
-        scalar = float(input("   Input scalar:\n>"))
-        output(f"{scalar} *\n{matrix_printer(matrix)}   =\n{matrix_printer(scalar_matrix_multiply(scalar, matrix))}")
-    
-    elif choice == "5":
-        #mutliply matrix by matrix
-        print("   For matrix 1:")
-        matrix1 = matrix_maker()
-        print("   for matrix 2:")
-        matrix2 = matrix_maker()
-
-        if get_dimensions(matrix1)[1] == get_dimensions(matrix2)[0]:
-            output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 * M2 =\n{matrix_printer(matrix_matrix_multiply(matrix1,matrix2))}")
-
-        elif get_dimensions(matrix1)[0] == get_dimensions(matrix2)[0] and get_dimensions(matrix1)[1] == 1 and get_dimensions(matrix2)[1] == 1:
-            if input("   The product of two column vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
-                Tmatrix1 = transpose(matrix1)
-                output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(Tmatrix1,matrix2)[0][0]}")
-        
-        elif get_dimensions(matrix1)[1] == get_dimensions(matrix2)[1] and get_dimensions(matrix1)[0] == 1 and get_dimensions(matrix2)[0] == 1:
-            if input("   The product of two row vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
-                Tmatrix2 = transpose(matrix2)
-                output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(matrix1,Tmatrix2)[0][0]}")
-        
+            print('   You are currently working in radians. To switch to degrees, enter "a".')
+        if info == True:
+            print('   You are in information mode. To exit information mode, enter "i".')
         else:
-            output("The product of two matrices of dimensions axb and cxd is not defined when b != c.")
+            print('   To enter information mode, enter "i".')
 
-    elif choice == "6":
-        #angle of two vectors
-        vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
-        vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
-        if len(vector1[0]) == len(vector2[0]):
-            answer = find_angle(vector1, vector2)
-            if answer != None:
-                if degree_switch == True:
-                    answer = answer/math.pi*180
-                output(f"The angle between vector 1 and vector 2 is {answer}.")
+        #user input and response
+        choice = input("\n>")
+
+        if choice == "0":
+            exit()
+
+        elif choice == "1":
+            state = "vectors"
+
+        elif choice == "2":
+            state = "matrices"
+
+        elif choice == "-1":
+            print("this is the current test code. You should already know what it does")
+
+        elif choice == "a":
+            degree_switch = not degree_switch
+        
+        elif choice == "i":
+            info = not info
+
+    elif state == "vectors":
+        #interactive text of the vector menu
+        print("   Please select a vector operation.\n")
+        print("   0: return\n   1: vector magnitude\n   2: vector addition\n   3: multiply vector by scalar\n   4: dot product\n   5: find angle between vectors\n   6: cross product\n")
+        print("   note that if a vector transformation can also be generally\n   applied to matrices, you will find it in the matrix section.")
+
+        #User input and response
+        choice = input(">")
+    
+        if choice == "0":
+            state = "main menu"
+
+        elif choice == "1":
+            #vector magnitude
+            vector = [clean_row(input("   Input a vector as a comma seperated list without brackets:\n>"))]
+            output(f"The magnitude of {vector} is {magnitude(vector)}.")
+
+        elif choice == "2":
+            #vector addition
+            #this is an intentionally redundant function which uses matrix addition
+            vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+            vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
+            vector_sum = matrix_add(vector1,vector2)
+            output(f"{vector1}\n   +\n   {vector2}\n   =\n{vector_sum}")
+
+        elif choice == "3":
+            #multiply vector by scalar
+            #this is an intentionally redundant function which uses scalar-matrix multiplication
+            vector = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+            scalar = float(input("   Input scalar\n>"))
+            new_vector = scalar_matrix_multiply(scalar, vector)
+            output(f"{scalar} *\n   {vector}\n   =\n   {new_vector}")
+
+        elif choice == "4":
+            #dot product
+            #this is an intentionally redundant function which uses matrix-matrix multiplication
+            vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+            vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
+            dot_product = matrix_matrix_multiply(vector2,transpose(vector1))[0][0]
+            output(f"the dot product of\n   {vector1}\n   and\n   {vector2}\n   is {dot_product}")
+
+        elif choice == "5":
+            #angle of two vectors
+            vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+            vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
+            if len(vector1[0]) == len(vector2[0]):
+                answer = find_angle(vector1, vector2)
+                if answer != None:
+                    if degree_switch == True:
+                        answer = answer/math.pi*180
+                    output(f"The angle between vector 1 and vector 2 is {answer}.")
+                else:
+                    output("The angle of any vector with the zero vector is not defined")
             else:
-                output("The angle of any vector with the zero vector is not defined")
-        else:
-            output("The angle between two vectors is only defined if they have the same number of elements")
+                output("The angle between two vectors is only defined if they have the same number of elements")
         
-    elif choice == "7":
-        #cross product
-        vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
-        vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
-        answer = cross_product(vector1, vector2)
-        if answer == None:
-            output("Error: The cross product is only defined in three dimensional space")
-        else:
-            output(f"The cross product of vector 1 and vector 2 is {answer}")
+        elif choice == "6":
+            #cross product
+            vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
+            vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
+            answer = cross_product(vector1, vector2)
+            if answer == None:
+                output("Error: The cross product is only defined in three dimensional space")
+            else:
+                output(f"The cross product of vector 1 and vector 2 is {answer}")
+
+    elif state == "matrices":
+        #interactive text of the matrix menu
+        print("   Please select a matrix operation.\n")
+        print("   0: return\n   1: matrix transpose\n   2: matrix addition\n   3: multiply matrix by scalar\n   4: multiply matrix by matrix\n   5: matrix determinant\n   6: reduced row echelon\n")  
+
+        #User input and response
+        choice = input(">")
     
-    elif choice == "8":
-        #determinant solver
+        if choice == "0":
+            state = "main menu"
+
+        elif choice == "1":
+            matrix = matrix_maker()
+            output(f"The transpose of\n{matrix_printer(matrix)}   is\n{matrix_printer(transpose(matrix))}")
+
+        elif choice == "2":
+            #add matrices
+            print("   For matrix 1:")
+            matrix1 = matrix_maker()
+            print("   for matrix 2:")
+            matrix2 = matrix_maker()
+            
+            if get_dimensions(matrix1) == get_dimensions(matrix2):
+                output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 + M2 =\n{matrix_printer(matrix_add(matrix1,matrix2))}")
+            else:
+                output("Matrix addition is not supported for matrices of different dimensionality")
+            #print(matrix_add(matrix1,matrix2))
+            #print(matrix_printer(matrix_add(matrix1,matrix2)))
+            
+        elif choice == "3":
+            #multiply matrix by scalar
+            matrix = matrix_maker()
+            scalar = float(input("   Input scalar:\n>"))
+            output(f"{scalar} *\n{matrix_printer(matrix)}   =\n{matrix_printer(scalar_matrix_multiply(scalar, matrix))}")
         
-        matrix = matrix_maker()
-        dimensions = get_dimensions(matrix)
+        elif choice == "4":
+            #mutliply matrix by matrix
+            print("   For matrix 1:")
+            matrix1 = matrix_maker()
+            print("   for matrix 2:")
+            matrix2 = matrix_maker()
 
-        if dimensions[0] == dimensions[1]:
-            #formats answer
-            answer = "the determinant of\n"
-            for row in matrix:
-                answer = answer + "   " + str(row) + "\n"
-            answer = answer + f"   is {determinant_solver(matrix)}"
-            output(answer)
+            if get_dimensions(matrix1)[1] == get_dimensions(matrix2)[0]:
+                output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 * M2 =\n{matrix_printer(matrix_matrix_multiply(matrix1,matrix2))}")
 
-        else:
-            output("Determinants are only defined for square matrices.")
+            elif get_dimensions(matrix1)[0] == get_dimensions(matrix2)[0] and get_dimensions(matrix1)[1] == 1 and get_dimensions(matrix2)[1] == 1:
+                if input("   The product of two column vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
+                    Tmatrix1 = transpose(matrix1)
+                    output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(Tmatrix1,matrix2)[0][0]}")
+            
+            elif get_dimensions(matrix1)[1] == get_dimensions(matrix2)[1] and get_dimensions(matrix1)[0] == 1 and get_dimensions(matrix2)[0] == 1:
+                if input("   The product of two row vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
+                    Tmatrix2 = transpose(matrix2)
+                    output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(matrix1,Tmatrix2)[0][0]}")
+            
+            else:
+                output("The product of two matrices of dimensions axb and cxd is not defined when b != c.")
 
-    elif choice == "9":
-        matrix = matrix_maker()
-        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(rref(matrix))}")
+        elif choice == "5":
+            #determinant solver
+            
+            matrix = matrix_maker()
+            dimensions = get_dimensions(matrix)
 
-    elif choice == "-1":
-        matrix = matrix_maker()
-        output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(red_row_echelon_TS(matrix))}")
+            if dimensions[0] == dimensions[1]:
+                #formats answer
+                answer = "the determinant of\n"
+                for row in matrix:
+                    answer = answer + "   " + str(row) + "\n"
+                answer = answer + f"   is {determinant_solver(matrix)}"
+                output(answer)
 
-    elif choice == "r":
-        degree_switch = False
-    
-    elif choice == "d":
-        degree_switch = True
+            else:
+                output("Determinants are only defined for square matrices.")
+
+        elif choice == "6":
+            matrix = matrix_maker()
+            output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(rref(matrix))}")
+
     
