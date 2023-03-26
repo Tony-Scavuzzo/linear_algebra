@@ -69,13 +69,7 @@ def matrix_printer(matrix):
             i = i + 1
     return outstring
 
-def output(string):
-    #formats outputs consistently
-    print("\n   ********************************************************************************")
-    print("   " + string)
-    print("   ********************************************************************************\n")
-
-def new_output(input):
+def output(input):
     #this function formats an input as an output consistent with this application's standards
     #for a single line output, input should be a string
     #for a multi line output, input should be a list
@@ -440,15 +434,16 @@ while True:
             elif choice == "1":
                 #vector magnitude
                 vector = [clean_row(input("   Input a vector as a comma seperated list without brackets:\n>"))]
-                new_output(f"The magnitude of {vector[0]} is {magnitude(vector)}.")
+                output(f"The magnitude of {vector[0]} is {magnitude(vector)}.")
 
             elif choice == "2":
                 #vector addition
                 #this is an intentionally redundant function which uses matrix addition
+                #TODO: Add error handling for wrong dimensions
                 vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
                 vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
                 vector_sum = matrix_add(vector1,vector2)
-                new_output([vector1[0],"+",vector2[0],"=",vector_sum[0]])
+                output([vector1[0],"+",vector2[0],"=",vector_sum[0]])
 
             elif choice == "3":
                 #multiply vector by scalar
@@ -456,15 +451,16 @@ while True:
                 vector = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
                 scalar = float(input("   Input scalar\n>"))
                 new_vector = scalar_matrix_multiply(scalar, vector)
-                new_output([scalar,"*",vector[0],"=",new_vector[0]])
+                output([scalar,"*",vector[0],"=",new_vector[0]])
 
             elif choice == "4":
                 #dot product
                 #this is an intentionally redundant function which uses matrix-matrix multiplication
+                #TODO: Add error handling
                 vector1 = [clean_row(input("   Input vector 1 as a comma seperated list without brackets:\n>"))]
                 vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
                 dot_product = matrix_matrix_multiply(vector2,transpose(vector1))[0][0]
-                new_output(["the dot product of",vector1[0],"and",vector2[0],"is",dot_product])
+                output(["the dot product of",vector1[0],"and",vector2[0],"is",dot_product])
 
             elif choice == "5":
                 #angle of two vectors
@@ -475,11 +471,11 @@ while True:
                     if answer != None:
                         if degree_switch == True:
                             answer = answer/math.pi*180
-                        new_output(f"The angle between vector 1 and vector 2 is {answer}.")
+                        output(f"The angle between vector 1 and vector 2 is {answer}.")
                     else:
-                        new_output("The angle of any vector with the zero vector is not defined")
+                        output("The angle of any vector with the zero vector is not defined")
                 else:
-                    new_output("The angle between two vectors is only defined if they have the same number of elements")
+                    output("The angle between two vectors is only defined if they have the same number of elements")
             
             elif choice == "6":
                 #cross product
@@ -487,9 +483,9 @@ while True:
                 vector2 = [clean_row(input("   Input vector 2 as a comma seperated list without brackets:\n>"))]
                 answer = cross_product(vector1, vector2)[0]
                 if answer == None:
-                    new_output("Error: The cross product is only defined in three dimensional space")
+                    output("Error: The cross product is only defined in three dimensional space")
                 else:
-                    new_output(f"The cross product of vector 1 and vector 2 is {answer}")
+                    output(f"The cross product of vector 1 and vector 2 is {answer}")
 
         elif state == "matrices":
             #interactive text of the matrix menu
@@ -505,7 +501,7 @@ while True:
             elif choice == "1":
                 #matrix transpose
                 matrix = matrix_maker()
-                new_output(["The transpose of"] + matrix + ["is"]+ transpose(matrix))
+                output(["The transpose of"] + matrix + ["is"]+ transpose(matrix))
 
             elif choice == "2":
                 #add matrices
@@ -515,18 +511,16 @@ while True:
                 matrix2 = matrix_maker()
                 
                 if get_dimensions(matrix1) == get_dimensions(matrix2):
-                    new_output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 + M2 ="] + matrix_add(matrix1,matrix2))
-                    #output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 + M2 =\n{matrix_printer(matrix_add(matrix1,matrix2))}")
+                    output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 + M2 ="] + matrix_add(matrix1,matrix2))
                 else:
-                    new_output("Matrix addition is not supported for matrices of different dimensionality")
+                    output("Matrix addition is not supported for matrices of different dimensionality")
 
                 
             elif choice == "3":
                 #multiply matrix by scalar
                 matrix = matrix_maker()
                 scalar = float(input("   Input scalar:\n>"))
-                new_output([scalar,"*"] + matrix + ["="] + scalar_matrix_multiply(scalar, matrix))
-                #output(f"{scalar} *\n{matrix_printer(matrix)}   =\n{matrix_printer(scalar_matrix_multiply(scalar, matrix))}")
+                output([scalar,"*"] + matrix + ["="] + scalar_matrix_multiply(scalar, matrix))
             
             elif choice == "4":
                 #mutliply matrix by matrix
@@ -536,47 +530,35 @@ while True:
                 matrix2 = matrix_maker()
 
                 if get_dimensions(matrix1)[1] == get_dimensions(matrix2)[0]:
-                    new_output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(matrix1,matrix2))
-                    #output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   M1 * M2 =\n{matrix_printer(matrix_matrix_multiply(matrix1,matrix2))}")
+                    output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(matrix1,matrix2))
 
                 elif get_dimensions(matrix1)[0] == get_dimensions(matrix2)[0] and get_dimensions(matrix1)[1] == 1 and get_dimensions(matrix2)[1] == 1:
                     if input("   The product of two column vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
                         Tmatrix1 = transpose(matrix1)
-                        new_output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(Tmatrix1,matrix2)[0][0])
-                        #output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(Tmatrix1,matrix2)[0][0]}")
+                        output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(Tmatrix1,matrix2)[0][0])
                 
                 elif get_dimensions(matrix1)[1] == get_dimensions(matrix2)[1] and get_dimensions(matrix1)[0] == 1 and get_dimensions(matrix2)[0] == 1:
                     if input("   The product of two row vectors is not defined. Did you intend to find the dot product? (y/n)\n>") == "y":
                         Tmatrix2 = transpose(matrix2)
-                        new_output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(matrix1,Tmatrix2)[0][0])
-                        #output(f"M1 =\n{matrix_printer(matrix1)}\n   M2 =\n{matrix_printer(matrix2)}\n   The dot product of M1 and M2 is {matrix_matrix_multiply(matrix1,Tmatrix2)[0][0]}")
+                        output(["M1 ="] + matrix1 + ["M2 ="] + matrix2 + ["M1 * M2 ="] + matrix_matrix_multiply(matrix1,Tmatrix2)[0][0])
                 
                 else:
                     output("The product of two matrices of dimensions axb and cxd is not defined when b != c.")
 
             elif choice == "5":
-                #determinant solver
-                
+
                 matrix = matrix_maker()
                 dimensions = get_dimensions(matrix)
 
                 if dimensions[0] == dimensions[1]:
-                    new_output(["The determinant of"] + matrix + ["is"] + [str(determinant_solver(matrix))])
-                    #formats answer
-                    """ answer = "the determinant of\n"
-                    for row in matrix:
-                        answer = answer + "   " + str(row) + "\n"
-                    answer = answer + f"   is {determinant_solver(matrix)}"
-                    output(answer) """
-
+                    output(["The determinant of"] + matrix + ["is"] + [str(determinant_solver(matrix))])
                 else:
-                    new_output("Determinants are only defined for square matrices.")
+                    output("Determinants are only defined for square matrices.")
 
             elif choice == "6":
                 #put matrix reduced row echelon
                 matrix = matrix_maker()
-                new_output(["The reduced row echelon form of"] + matrix + ["is"] + rref(matrix))
-                #output(f"The reduced row echelon form of\n{matrix_printer(matrix)}   is\n{matrix_printer(rref(matrix))}")
+                output(["The reduced row echelon form of"] + matrix + ["is"] + rref(matrix))
 
     else:
         if state == "main menu":
@@ -615,30 +597,30 @@ while True:
 
             elif choice == "1":
                 #vector magnitude
-                output("stuff")
+                output(["The magnitude of a vector is the length of the vector,","which can be calculated for a vector of any dimension","The magnitude of a vector A with n dimensions is","|A| = sqrt(a1^2 + a2^2 + a3^2 + ... an^2"])
 
             elif choice == "2":
                 #vector addition
                 #this is an intentionally redundant function which uses matrix addition
-                output("stuff")
+                output(["For vectors A and B which both have n dimensions, vector addition is defined as","A + B = [a1 + b1, a2 + b2, a3 + b3, ... an + bn]","Note that vector addition is not defined for vectors of different length.","Vector addition, like scalar addition, is commutative e.g. a + b = b + a","Vector addition, like scalar addition, is associative e.g. (a + b) + c = a + (b + c)","One can visualize vector addition by placing the beginning of vector B at the end of vector A.","The vector which connects the beginning of A to the end of B is A + B."])
 
             elif choice == "3":
                 #multiply vector by scalar
                 #this is an intentionally redundant function which uses scalar-matrix multiplication
-                output("stuff")
+                output(["The multiplication of a vector A by a scalar b is defined as","bA = [ba1, ba2, ba3, ... ban]","Scalar-Vector multiplication is associative e.g. b(cA) = (bc)A","Scalar-Vector multiplication is commutative e.g. bA = Ab","Scalar-Vector multiplication is distributive e.g. (b+c)A = bA + cA and c(A + B) = cA + cB","Scalar-Vector multiplication can be conceptualized as transforming vector A by elongating it by a factor of b.","If b is negative, it reverses the direction of A and also multiplies its length by a factor of |b|."])
 
             elif choice == "4":
                 #dot product
                 #this is an intentionally redundant function which uses matrix-matrix multiplication
-                output("stuff")
+                output(["The dot product of vector A with vector B is defined as","A * B = [a1b1 + a2b2 + a3b3 + ... anbn]","where the dot product is not defined for vectors of different length.","The also satisfies the equation", "A * B = |A||B|cos(theta)","where theta is the angle between the two vectors."])
 
             elif choice == "5":
                 #angle of two vectors
-                output("stuff")
+                output("The angle between two vectors is determined using the two definitions of the dot product")
             
             elif choice == "6":
                 #cross product
-                output("stuff")
+                output(["The cross product of two vectors A and B in R3 is defineds as","AxB = [a2b3-a3b2, -(a1b3-a3b1), a1b2-a2b1]","The cross product AxB is always perpendicular to A and B.","Furthermore, |AxB| = |A||B|sin(theta)","The direction of of the cross product is determined by the right hand rule."])
 
         elif state == "matrices":
             #interactive text of the matrix menu
