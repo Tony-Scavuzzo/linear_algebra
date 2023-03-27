@@ -389,8 +389,13 @@ while True:
     if info == False:
         if state == "main menu":
             #interactive text of the menu
-            print("   Please select an option from the following menu by typing a number and pressing enter.\n")
-            print("   0: exit\n   1: vector operations\n   2: matrix operations\n")
+            print("   Please select an option from the following menu by typing a number and pressing enter.")
+            print(
+"""
+   0: exit
+   1: vector operations
+   2: matrix operations
+""")
             #changes menu to reflect flags
             if degree_switch == True:
                 print('   You are currently working in degrees. To switch to radians, enter "a".')
@@ -421,9 +426,22 @@ while True:
 
         elif state == "vectors":
             #interactive text of the vector menu
-            print("   Please select a vector operation.\n")
-            print("   0: return\n   1: vector magnitude\n   2: vector addition\n   3: multiply vector by scalar\n   4: dot product\n   5: find angle between vectors\n   6: cross product\n")
-            print("   note that if a vector transformation can also be generally\n   applied to matrices, you will find it in the matrix section.")
+            print("   Please select a vector operation.")
+            print(
+"""
+   0: return
+   1: vector magnitude
+   2: vector addition
+   3: multiply vector by scalar
+   4: dot product
+   5: find angle between vectors
+   6: cross product
+   """)
+            print(
+"""
+   Note that if a vector transformation can also be generally
+   applied to matrices, you will find it in the matrix section.
+""")
 
             #User input and response
             choice = input(">")
@@ -489,8 +507,17 @@ while True:
 
         elif state == "matrices":
             #interactive text of the matrix menu
-            print("   Please select a matrix operation.\n")
-            print("   0: return\n   1: matrix transpose\n   2: matrix addition\n   3: multiply matrix by scalar\n   4: multiply matrix by matrix\n   5: matrix determinant\n   6: reduced row echelon\n")  
+            print("   Please select a matrix operation.")
+            print(
+"""
+   0: return
+   1: matrix transpose
+   2: matrix addition
+   3: multiply matrix by scalar
+   4: multiply matrix by matrix
+   5: matrix determinant
+   6: reduced row echelon
+""")  
 
             #User input and response
             choice = input(">")
@@ -563,8 +590,13 @@ while True:
     else:
         if state == "main menu":
             #interactive text of the menu
-            print("   Please select an option from the following menu by typing a number and pressing enter.\n")
-            print("   0: exit\n   1: vector operations\n   2: matrix operations\n")
+            print("   Please select an option from the following menu by typing a number and pressing enter.")
+            print(
+"""
+   0: exit
+   1: vector operations
+   2: matrix operations
+""")
             if info == True:
                 print('   You are in information mode. To exit information mode, enter "i".')
 
@@ -585,9 +617,23 @@ while True:
 
         elif state == "vectors":
             #interactive text of the vector menu
-            print("   You are in info mode. Please select a vector operation to learn more about it.\n")
-            print("   0: return\n   1: vector magnitude\n   2: vector addition\n   3: multiply vector by scalar\n   4: dot product\n   5: find angle between vectors\n   6: cross product\n")
-            print("   note that if a vector transformation can also be generally\n   applied to matrices, you will find it in the matrix section.")
+            print("   You are in info mode. Please select a vector operation to learn more about it.")
+            print(
+"""
+   0: return
+   1: vector magnitude
+   2: vector addition
+   3: multiply vector by scalar
+   4: dot product
+   5: find angle between vectors
+   6: cross product
+""")
+            
+            print(
+"""
+   Note that if a vector transformation can also be generally
+   applied to matrices, you will find it in the matrix section.
+""")
 
             #User input and response
             choice = input(">")
@@ -597,22 +643,72 @@ while True:
 
             elif choice == "1":
                 #vector magnitude
-                output(["The magnitude of a vector is the length of the vector,","which can be calculated for a vector of any dimension","The magnitude of a vector A with n dimensions is","|A| = sqrt(a1^2 + a2^2 + a3^2 + ... an^2"])
+                output([
+                    "The magnitude of a vector is the length of the vector,",
+                    "which can be calculated for a vector of any dimension",
+                    "The magnitude of a vector A with n dimensions is",
+                    "",
+                    "|A| = sqrt(a1^2 + a2^2 + a3^2 + ... an^2"
+                    ])
 
             elif choice == "2":
                 #vector addition
                 #this is an intentionally redundant function which uses matrix addition
-                output(["For vectors A and B which both have n dimensions, vector addition is defined as","A + B = [a1 + b1, a2 + b2, a3 + b3, ... an + bn]","Note that vector addition is not defined for vectors of different length.","Vector addition, like scalar addition, is commutative e.g. a + b = b + a","Vector addition, like scalar addition, is associative e.g. (a + b) + c = a + (b + c)","One can visualize vector addition by placing the beginning of vector B at the end of vector A.","The vector which connects the beginning of A to the end of B is A + B."])
+                output([
+                    "For vectors A and B which both have n dimensions",
+                     "",
+                    "A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]",
+                    "",
+                    "vector addition is defined as",
+                    "",
+                    "A + B = [a1 + b1, a2 + b2, a3 + b3, ... an + bn]",
+                    "",
+                    "Note that vector addition is not defined for vectors of different length.",
+                    "Vector addition is commutative e.g. a + b = b + a",
+                    "Vector addition is associative e.g. (a + b) + c = a + (b + c)",
+                    "One can visualize vector addition by placing the beginning of vector B at the end of vector A.",
+                    "The vector which connects the beginning of A to the end of B is A + B."
+                    ])
 
             elif choice == "3":
                 #multiply vector by scalar
                 #this is an intentionally redundant function which uses scalar-matrix multiplication
-                output(["The multiplication of a vector A by a scalar b is defined as","bA = [ba1, ba2, ba3, ... ban]","Scalar-Vector multiplication is associative e.g. b(cA) = (bc)A","Scalar-Vector multiplication is commutative e.g. bA = Ab","Scalar-Vector multiplication is distributive e.g. (b+c)A = bA + cA and c(A + B) = cA + cB","Scalar-Vector multiplication can be conceptualized as transforming vector A by elongating it by a factor of b.","If b is negative, it reverses the direction of A and also multiplies its length by a factor of |b|."])
+                output([
+                    "The multiplication of a vector A",
+                    "",
+                    "A = [a1, a2, a3, ... an]",
+                    "",
+                    "by a scalar b is defined as",
+                    "",
+                    "bA = [ba1, ba2, ba3, ... ban]",
+                    "",
+                    "Scalar-Vector multiplication is associative e.g. b(cA) = (bc)A",
+                    "Scalar-Vector multiplication is commutative e.g. bA = Ab",
+                    "Scalar-Vector multiplication is distributive e.g. (b+c)A = bA + cA and c(A + B) = cA + cB",
+                    "Scalar-Vector multiplication can be conceptualized as transforming vector A by elongating it by a factor of b.",
+                    "If b is negative, it reverses the direction of A and also multiplies its length by a factor of |b|."
+                    ])
 
             elif choice == "4":
                 #dot product
                 #this is an intentionally redundant function which uses matrix-matrix multiplication
-                output(["The dot product of vector A with vector B is defined as","A * B = [a1b1 + a2b2 + a3b3 + ... anbn]","where the dot product is not defined for vectors of different length.","The also satisfies the equation", "A * B = |A||B|cos(theta)","where theta is the angle between the two vectors."])
+                output([
+                    "For vectors A and B",
+                    "",
+                    "A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]",
+                    "",
+                    "the dot product is defined as"
+                    "",
+                    "A * B = [a1b1 + a2b2 + a3b3 + ... anbn]",
+                    "",
+                    "where the dot product is not defined for vectors of different length.",
+                    "The dot product also satisfies the equation",
+                    "",
+                    "A * B = |A||B|cos(theta)",
+                    "",
+                    "where theta is the angle between the two vectors."
+                    "One can consider the dot product as a special case of more general matrix multiplication"
+                    ])
 
             elif choice == "5":
                 #angle of two vectors
@@ -620,12 +716,35 @@ while True:
             
             elif choice == "6":
                 #cross product
-                output(["The cross product of two vectors A and B in R3 is defineds as","AxB = [a2b3-a3b2, -(a1b3-a3b1), a1b2-a2b1]","The cross product AxB is always perpendicular to A and B.","Furthermore, |AxB| = |A||B|sin(theta)","The direction of of the cross product is determined by the right hand rule."])
+                output([
+                    "For two vectors A and B in R3",
+                    "",
+                    "A = [a1, a2, a3]   B = [b1, b2, b3]",
+                    "",
+                    "the cross product",
+                    "",
+                    "AxB = [a2b3-a3b2, -(a1b3-a3b1), a1b2-a2b1]",
+                    "",
+                    "The cross product AxB is always perpendicular to A and B.",
+                    "and the direction of the cross product is determined by the right hand rule.",
+                    "Furthermore,",
+                    "",
+                    "|AxB| = |A||B|sin(theta)",
+                    ])
 
         elif state == "matrices":
             #interactive text of the matrix menu
-            print("   You are in info mode. Please select a matrix operation to learn more about it.\n")
-            print("   0: return\n   1: matrix transpose\n   2: matrix addition\n   3: multiply matrix by scalar\n   4: multiply matrix by matrix\n   5: matrix determinant\n   6: reduced row echelon\n")  
+            print("   You are in info mode. Please select a matrix operation to learn more about it.")
+            print(
+"""
+   0: return
+   1: matrix transpose
+   2: matrix addition
+   3: multiply matrix by scalar
+   4: multiply matrix by matrix
+   5: matrix determinant
+   6: reduced row echelon
+""")  
 
             #User input and response
             choice = input(">")
@@ -635,19 +754,104 @@ while True:
 
             elif choice == "1":
                 #transpose matrix
-                output("some stuff")
+                output([
+                    "The Transpose T of an nxm matrix A is defined as",
+                    "",
+                    "       [a11 a12 a13 ... a1m]       [a11 a21 a31 ... an1]",
+                    "       [a21 a22 a23 ... a2m]       [a12 b22 b32 ... an2]",
+                    "T(A) = [a31 a32 a33 ... a3m]   =   [a13 a23 a33 ... an3]",
+                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
+                    "       [an1 an2 an3 ... anm]       [a1m a2m a3m ... anm]",
+                    "",
+                    "Note that this transforms an nxm matrix into an mxn matrix.",
+                    "This operation is used as an intermediate step in many important operations."])
 
             elif choice == "2":
                 #add matrices
-                output("some stuff")
+                output([
+                    "For matrices A and B, which both nxm dimensions:",
+                    "",
+                    "       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1m]",
+                    "       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2m]",
+                    "   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3m]",
+                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
+                    "       [an1 an2 an3 ... anm]       [bn1 bn2 bn3 ... bnm]",
+                    "", 
+                    "matrix addition is defined as",
+                    "",
+                    "        [a11+b11 a12+b12 a13+b13 ... a1m+b1m]",
+                    "        [a21+b21 a22+b22 a23+b23 ... a2m+b2m]",
+                    "A + B = [a31+b31 a32+b32 a33+b33 ... a3m+b3m]",
+                    "        [   .       .       .    ...    .   ]",
+                    "        [an1+bn1 an2+bn2 an3+bn3 ... anm+bnm]",
+                    "",
+                    "Note that matrix addition is not defined for matrices of different dimensions",
+                    "Matrix addition is commutative e.g. A + B = B + A",
+                    "Matrix addition is associative e.g. A + (B + C) = (A + B) + C"
+                    ])
                 
             elif choice == "3":
                 #multiply matrix by scalar
-                output("some stuff")
+                output([
+                "For a matrix A",
+                "",
+                "       [a11 a12 a13 ... a1m]",
+                "       [a21 a22 a23 ... a2m]",
+                "   A = [a31 a32 a33 ... a3m]",
+                "       [ .   .   .  ...  . ]",
+                "       [an1 an2 an3 ... anm]",
+                "",
+                "the multiplication of A by a scalar b is defined as",
+                "",
+                "       [ba11 ba12 ba13 ... ba1m]",
+                "       [ba21 ba22 ba23 ... ba2m]",
+                "  bA = [ba31 ba32 ba33 ... ba3m]",
+                "       [  .    .    .  ...   . ]",
+                "       [ban1 ban2 ban3 ... banm]",
+                "",
+                "Scalar-Matrix multiplication is associative e.g. b(cA) = (bc)A",
+                "Scalar-Matrix multiplication is commutative e.g. bA = Ab"
+                ])
             
             elif choice == "4":
                 #mutliply matrix by matrix
-                output("some stuff")
+                output([
+                    "For matrix A, which has dimensions of lxm, and matrix B, which has dimensions of mxn:",
+                    "",
+                    "       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1n]",
+                    "       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2n]",
+                    "   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3n]",
+                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
+                    "       [al1 al2 al3 ... alm]       [bm1 bm2 bm3 ... bmn]",
+                    "", 
+                    "matrix multiplication is defined as",
+                    "",
+                    "        [a11b11+a12b21+a13b31...+a1mbm1 a11b12+a12b22+a13b32...+a1mbm2 a11b13+a12b23+a13b33...+a1mbm3 ... a11b1n+a12b2n+a13b3n...+a1mbmn]",
+                    "        [a21b11+a22b21+a23b31...+a2mbm1 a21b12+a22b22+a23b32...+a2mbm2 a21b13+a22b23+a23b33...+a2mbm3 ... a21b1n+a22b2n+a23b3n...+a2mbmn]",
+                    "A * B = [a31b11+a32b21+a33b31...+a3mbm1 a31b12+a32b22+a33b32...+a3mbm2 a31b13+a32b23+a33b33...+a3mbm3 ... a31b1n+a32b2n+a33b3n...+a3mbmn]",
+                    "        [             .                              .                              .                 ...              .                ]",
+                    "        [al1b11+al2b21+al3b31...+almbm1 al1b12+al2b22+al3b32...+almbm2 al1b13+al2b23+al3b33...+almbm3 ... al1b1n+al2b2n+al3b3n...+almbmn]",
+                    "",
+                    "Note that A * B is a lxn matrix",
+                    "Note also that matrix multiplication is only defined when the width of A and the height of B are be equal.",
+                    "Another way to think of matrix multiplication is as an extension of dot products.",
+                    "If matrix A is rewritten as a collection of row vectors R1-Rl",
+                    "And matrix B is rewritten as a collection of column vectors C1-Cn",
+                    "",
+                    "       [R1]                            ",
+                    "       [R2]                            ",
+                    "   A = [R3]   B = [C1 C2 C3 ... Cn]",
+                    "       [ .]                            ",
+                    "       [Rl]                            ",
+                    "",
+                    "matrix multiplication can be described as",
+                    "",
+                    "        [R1*C1 R1*C2 R1*C3 ... R1*Cn]",
+                    "        [R2*C1 R2*C2 R2*C3 ... R2*Cn]",
+                    "A * B = [R3*C1 R3*C2 R3*C3 ... R3*Cn]",
+                    "        [  .     .     .   ...   .  ]",
+                    "        [Rl*C1 Rl*C2 Rl*C3 ... Rl*Cn]"
+                    ])
 
             elif choice == "5":
                 #determinant solver
