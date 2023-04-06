@@ -1,0 +1,16 @@
+*** Scalar Vector Multiplication ***
+
+The multiplication of a vector A
+
+A = [a1, a2, a3, ... an]
+
+by a scalar b is defined as
+
+bA = [ba1, ba2, ba3, ... ban]
+
+Scalar-Vector multiplication is associative e.g. b(cA) = (bc)A
+Scalar-Vector multiplication is commutative e.g. bA = Ab
+Scalar-Vector multiplication is distributive e.g. (b+c)A = bA + cA and c(A + B) = cA + cB
+
+Scalar-Vector multiplication can be conceptualized as transforming vector A by elongating it by a factor of b.
+If b is negative, it reverses the direction of A and also multiplies its length by a factor of |b|.

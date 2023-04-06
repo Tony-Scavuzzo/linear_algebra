@@ -1,0 +1,12 @@
+*** Matrix Transpose ***
+
+The Transpose T of an nxm matrix A is defined as
+
+       [a11 a12 a13 ... a1m]       [a11 a21 a31 ... an1]
+       [a21 a22 a23 ... a2m]       [a12 b22 b32 ... an2]
+T(A) = [a31 a32 a33 ... a3m]   =   [a13 a23 a33 ... an3]
+       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]
+       [an1 an2 an3 ... anm]       [a1m a2m a3m ... anm]
+
+Note that this transforms an nxm matrix into an mxn matrix.
+This operation is used as an intermediate step in many important operations.

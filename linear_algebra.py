@@ -1,4 +1,18 @@
 import math
+import os
+info_path = "/home/tonys/Documents/python_work/linear_algebra/info/"
+
+#if the info folder exists at path, then create a dictionary where the key is the file name and the value is the contents of the file
+info_dict = {}
+if os.path.exists(info_path):
+    for file in os.listdir(info_path):
+        with open(info_path + file, "r") as file:
+            lines = file.readlines()
+        info_dict[(os.path.basename(file.name)[:-4])] = lines
+    info_exists = True
+else:
+    info_exists = False
+
 
 #these functions are general purpose for this code
 def clean_row(vector_input):
@@ -82,7 +96,19 @@ def output(input):
             print("   " + str(line))
     print("   ********************************************************************************\n")
 
-#These functions are used for the row echelon function(s)
+def info_output(dictionary, key):
+    if key in dictionary:
+        lines = dictionary[key]
+        print("\n   ********************************************************************************")
+        for line in lines:
+            print("   " + line[:-1])
+        print("   ********************************************************************************\n")
+    else:
+        print("\n   ********************************************************************************")
+        print(f"   {key}.txt not found in {info_path}")
+        print("   ********************************************************************************\n")
+
+#These functions are used for gaussian elimination
 def num_zeros(row):
     i = 0
     still_zero = True
@@ -92,6 +118,35 @@ def num_zeros(row):
         else:
             still_zero = False
     return(i)
+
+def swap_rows(matrix, row1, row2):
+    new_matrix = []
+    i = 0
+    while i < len(matrix):
+        if i != row1 and i != row2:
+            new_matrix.append(matrix[i])
+        elif i == row1:
+            new_matrix.append(matrix[row2])
+        elif i == row2:
+            new_matrix.append(matrix[row1])
+        i = i + 1
+    return(new_matrix)
+
+def row_add(matrix, c1, row1, c2, row2):
+    #row1 = c1*row1 - c2*row2
+    new_matrix = []
+    i = 0
+    while i < len(matrix):
+        if i == row1:
+            new_row = []
+            j = 0
+            while j < len(matrix[row1]):
+                new_row.append(c1 * matrix[row1][j] + c2 * matrix[row2][j])
+                j = j + 1
+            new_matrix.append(new_row)
+        else:
+            new_matrix.append(matrix[i])
+        i = i + 1
 
 def row_multiply(row, scalar):
     #for multiplying a row of a matrix - not the same as scalar_matrix_multiply due to different number of brackets
@@ -340,6 +395,29 @@ def determinant_solver(determinant):
         i = i + 1
     return(final_sum)
 
+def det2(matrix):
+    #This function finds the deteriminant of a matrix through gaussian elimination and the triangle property
+    #It is intended to function faster than the original determinant function.
+
+    #Stores coefficient of matrix
+    C = 1
+
+    #Sorts matrix by number of leading zeroes
+    done = False
+    while done == False:
+        done = True
+        print("starting new loop")
+        i = 1
+        while i < len(matrix):
+            if num_zeros(matrix[i]) < num_zeros(matrix[i-1]):
+                matrix = swap_rows(matrix, i, i+1)
+                C = -1 * C
+                done = False
+                print(f"swapping rows {i} and {i-1}")
+            i = i + 1
+
+    return(matrix, C)
+
 def rref(matrix):
     dimensions = get_dimensions(matrix)
     matrix = ref(matrix)
@@ -386,7 +464,7 @@ print("   Welcome to the interactive linear algebra application!")
 #interactive session
 while True:
 
-    if info == False:
+    if not info:
         if state == "main menu":
             #interactive text of the menu
             print("   Please select an option from the following menu by typing a number and pressing enter.")
@@ -417,12 +495,20 @@ while True:
 
             elif choice == "-1":
                 print("this is the current test code. You should already know what it does")
+                print(info_path)
+                if vector_magnitude_info != None:
+                    output(vector_magnitude_info)
+                else:
+                    output("The vector magnitude info file is missing or damaged")
 
             elif choice == "a":
                 degree_switch = not degree_switch
             
             elif choice == "i":
-                info = not info
+                if info_exists:
+                    info = True
+                else:
+                    output(f"The info folder could not be found at {path}. Exiting info mode.")
 
         elif state == "vectors":
             #interactive text of the vector menu
@@ -613,7 +699,7 @@ while True:
                 state = "matrices"
             
             elif choice == "i":
-                info = not info
+                info = False
 
         elif state == "vectors":
             #interactive text of the vector menu
@@ -643,94 +729,30 @@ while True:
 
             elif choice == "1":
                 #vector magnitude
-                output([
-                    "The magnitude of a vector is the length of the vector,",
-                    "which can be calculated for a vector of any dimension",
-                    "The magnitude of a vector A with n dimensions is",
-                    "",
-                    "|A| = sqrt(a1^2 + a2^2 + a3^2 + ... an^2"
-                    ])
+                info_output(info_dict, "vector_magnitude")
 
             elif choice == "2":
                 #vector addition
                 #this is an intentionally redundant function which uses matrix addition
-                output([
-                    "For vectors A and B which both have n dimensions",
-                     "",
-                    "A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]",
-                    "",
-                    "vector addition is defined as",
-                    "",
-                    "A + B = [a1 + b1, a2 + b2, a3 + b3, ... an + bn]",
-                    "",
-                    "Note that vector addition is not defined for vectors of different length.",
-                    "Vector addition is commutative e.g. a + b = b + a",
-                    "Vector addition is associative e.g. (a + b) + c = a + (b + c)",
-                    "One can visualize vector addition by placing the beginning of vector B at the end of vector A.",
-                    "The vector which connects the beginning of A to the end of B is A + B."
-                    ])
+                info_output(info_dict, "vector_addition")
 
             elif choice == "3":
                 #multiply vector by scalar
                 #this is an intentionally redundant function which uses scalar-matrix multiplication
-                output([
-                    "The multiplication of a vector A",
-                    "",
-                    "A = [a1, a2, a3, ... an]",
-                    "",
-                    "by a scalar b is defined as",
-                    "",
-                    "bA = [ba1, ba2, ba3, ... ban]",
-                    "",
-                    "Scalar-Vector multiplication is associative e.g. b(cA) = (bc)A",
-                    "Scalar-Vector multiplication is commutative e.g. bA = Ab",
-                    "Scalar-Vector multiplication is distributive e.g. (b+c)A = bA + cA and c(A + B) = cA + cB",
-                    "Scalar-Vector multiplication can be conceptualized as transforming vector A by elongating it by a factor of b.",
-                    "If b is negative, it reverses the direction of A and also multiplies its length by a factor of |b|."
-                    ])
+                info_output(info_dict, "scalar_vector_multiplication")
 
             elif choice == "4":
                 #dot product
                 #this is an intentionally redundant function which uses matrix-matrix multiplication
-                output([
-                    "For vectors A and B",
-                    "",
-                    "A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]",
-                    "",
-                    "the dot product is defined as"
-                    "",
-                    "A * B = [a1b1 + a2b2 + a3b3 + ... anbn]",
-                    "",
-                    "where the dot product is not defined for vectors of different length.",
-                    "The dot product also satisfies the equation",
-                    "",
-                    "A * B = |A||B|cos(theta)",
-                    "",
-                    "where theta is the angle between the two vectors."
-                    "One can consider the dot product as a special case of more general matrix multiplication"
-                    ])
+                info_output(info_dict, "dot_product")
 
             elif choice == "5":
                 #angle of two vectors
-                output("The angle between two vectors is determined using the two definitions of the dot product")
+                info_output(info_dict, "two_vector_angle")
             
             elif choice == "6":
                 #cross product
-                output([
-                    "For two vectors A and B in R3",
-                    "",
-                    "A = [a1, a2, a3]   B = [b1, b2, b3]",
-                    "",
-                    "the cross product",
-                    "",
-                    "AxB = [a2b3-a3b2, -(a1b3-a3b1), a1b2-a2b1]",
-                    "",
-                    "The cross product AxB is always perpendicular to A and B.",
-                    "and the direction of the cross product is determined by the right hand rule.",
-                    "Furthermore,",
-                    "",
-                    "|AxB| = |A||B|sin(theta)",
-                    ])
+                info_output(info_dict, "cross_product")
 
         elif state == "matrices":
             #interactive text of the matrix menu
@@ -754,108 +776,42 @@ while True:
 
             elif choice == "1":
                 #transpose matrix
-                output([
-                    "The Transpose T of an nxm matrix A is defined as",
-                    "",
-                    "       [a11 a12 a13 ... a1m]       [a11 a21 a31 ... an1]",
-                    "       [a21 a22 a23 ... a2m]       [a12 b22 b32 ... an2]",
-                    "T(A) = [a31 a32 a33 ... a3m]   =   [a13 a23 a33 ... an3]",
-                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
-                    "       [an1 an2 an3 ... anm]       [a1m a2m a3m ... anm]",
-                    "",
-                    "Note that this transforms an nxm matrix into an mxn matrix.",
-                    "This operation is used as an intermediate step in many important operations."])
+                info_output(info_dict, "matrix_transpose")
 
             elif choice == "2":
                 #add matrices
-                output([
-                    "For matrices A and B, which both nxm dimensions:",
-                    "",
-                    "       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1m]",
-                    "       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2m]",
-                    "   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3m]",
-                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
-                    "       [an1 an2 an3 ... anm]       [bn1 bn2 bn3 ... bnm]",
-                    "", 
-                    "matrix addition is defined as",
-                    "",
-                    "        [a11+b11 a12+b12 a13+b13 ... a1m+b1m]",
-                    "        [a21+b21 a22+b22 a23+b23 ... a2m+b2m]",
-                    "A + B = [a31+b31 a32+b32 a33+b33 ... a3m+b3m]",
-                    "        [   .       .       .    ...    .   ]",
-                    "        [an1+bn1 an2+bn2 an3+bn3 ... anm+bnm]",
-                    "",
-                    "Note that matrix addition is not defined for matrices of different dimensions",
-                    "Matrix addition is commutative e.g. A + B = B + A",
-                    "Matrix addition is associative e.g. A + (B + C) = (A + B) + C"
-                    ])
+                info_output(info_dict, "matrix_addition")
                 
             elif choice == "3":
                 #multiply matrix by scalar
-                output([
-                "For a matrix A",
-                "",
-                "       [a11 a12 a13 ... a1m]",
-                "       [a21 a22 a23 ... a2m]",
-                "   A = [a31 a32 a33 ... a3m]",
-                "       [ .   .   .  ...  . ]",
-                "       [an1 an2 an3 ... anm]",
-                "",
-                "the multiplication of A by a scalar b is defined as",
-                "",
-                "       [ba11 ba12 ba13 ... ba1m]",
-                "       [ba21 ba22 ba23 ... ba2m]",
-                "  bA = [ba31 ba32 ba33 ... ba3m]",
-                "       [  .    .    .  ...   . ]",
-                "       [ban1 ban2 ban3 ... banm]",
-                "",
-                "Scalar-Matrix multiplication is associative e.g. b(cA) = (bc)A",
-                "Scalar-Matrix multiplication is commutative e.g. bA = Ab"
-                ])
+                info_output(info_dict, "scalar_matrix_multiplication")
             
             elif choice == "4":
                 #mutliply matrix by matrix
-                output([
-                    "For matrix A, which has dimensions of lxm, and matrix B, which has dimensions of mxn:",
-                    "",
-                    "       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1n]",
-                    "       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2n]",
-                    "   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3n]",
-                    "       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]",
-                    "       [al1 al2 al3 ... alm]       [bm1 bm2 bm3 ... bmn]",
-                    "", 
-                    "matrix multiplication is defined as",
-                    "",
-                    "        [a11b11+a12b21+a13b31...+a1mbm1 a11b12+a12b22+a13b32...+a1mbm2 a11b13+a12b23+a13b33...+a1mbm3 ... a11b1n+a12b2n+a13b3n...+a1mbmn]",
-                    "        [a21b11+a22b21+a23b31...+a2mbm1 a21b12+a22b22+a23b32...+a2mbm2 a21b13+a22b23+a23b33...+a2mbm3 ... a21b1n+a22b2n+a23b3n...+a2mbmn]",
-                    "A * B = [a31b11+a32b21+a33b31...+a3mbm1 a31b12+a32b22+a33b32...+a3mbm2 a31b13+a32b23+a33b33...+a3mbm3 ... a31b1n+a32b2n+a33b3n...+a3mbmn]",
-                    "        [             .                              .                              .                 ...              .                ]",
-                    "        [al1b11+al2b21+al3b31...+almbm1 al1b12+al2b22+al3b32...+almbm2 al1b13+al2b23+al3b33...+almbm3 ... al1b1n+al2b2n+al3b3n...+almbmn]",
-                    "",
-                    "Note that A * B is a lxn matrix",
-                    "Note also that matrix multiplication is only defined when the width of A and the height of B are be equal.",
-                    "Another way to think of matrix multiplication is as an extension of dot products.",
-                    "If matrix A is rewritten as a collection of row vectors R1-Rl",
-                    "And matrix B is rewritten as a collection of column vectors C1-Cn",
-                    "",
-                    "       [R1]                            ",
-                    "       [R2]                            ",
-                    "   A = [R3]   B = [C1 C2 C3 ... Cn]",
-                    "       [ .]                            ",
-                    "       [Rl]                            ",
-                    "",
-                    "matrix multiplication can be described as",
-                    "",
-                    "        [R1*C1 R1*C2 R1*C3 ... R1*Cn]",
-                    "        [R2*C1 R2*C2 R2*C3 ... R2*Cn]",
-                    "A * B = [R3*C1 R3*C2 R3*C3 ... R3*Cn]",
-                    "        [  .     .     .   ...   .  ]",
-                    "        [Rl*C1 Rl*C2 Rl*C3 ... Rl*Cn]"
-                    ])
+                info_output(info_dict, "matrix_multiplication")
 
             elif choice == "5":
                 #determinant solver
-                output("some stuff")
+                choice2 = -1
+                while choice2 != "0":
+                    print("   What would you like to know about determinants?")
+                    print(
+"""
+   1: Calculating a Determinant
+   2: Determinant Properties
+   3: Determinant Applications
+   0: Done
+""")
+                    choice2 = input("\n>")
+                    if choice2 == "1":
+                        print("choice2 is working!")
+                        info_output(info_dict, "determinants_1")
+                        
+                    if choice2 == "2":
+                        info_output(info_dict, "determinants_2")
+                    
+                    if choice2 == "3":
+                        info_output(info_dict, "determinants_3")
 
             elif choice == "6":
-                output("some stuff")
+                info_output("reduced_row_echelon")

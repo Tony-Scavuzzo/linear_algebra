@@ -1,0 +1,8 @@
+*** Angle Between Two Vectors ***
+
+The angle between two vectors is determined using the dot product.
+For vectors A and B
+
+A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]
+
+theta = arccos[(A * B)/(|A||B|)]

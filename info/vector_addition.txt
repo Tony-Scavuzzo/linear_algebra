@@ -1,0 +1,13 @@
+*** Vector Addition ***
+
+A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]
+
+vector addition is defined as
+
+A + B = [a1 + b1, a2 + b2, a3 + b3, ... an + bn]
+
+Note that vector addition is not defined for vectors of different length.
+Vector addition is commutative e.g. a + b = b + a
+Vector addition is associative e.g. (a + b) + c = a + (b + c)
+One can visualize vector addition by placing the beginning of vector B at the end of vector A.
+The vector which connects the beginning of A to the end of B is A + B.

@@ -1,0 +1,20 @@
+*** Scalar Matrix Multiplication ***
+
+For a matrix A
+
+       [a11 a12 a13 ... a1m]
+       [a21 a22 a23 ... a2m]
+   A = [a31 a32 a33 ... a3m]
+       [ .   .   .  ...  . ]
+       [an1 an2 an3 ... anm]
+
+the multiplication of A by a scalar b is defined as
+
+       [ba11 ba12 ba13 ... ba1m]
+       [ba21 ba22 ba23 ... ba2m]
+  bA = [ba31 ba32 ba33 ... ba3m]
+       [  .    .    .  ...   . ]
+       [ban1 ban2 ban3 ... banm]
+
+Scalar-Matrix multiplication is associative e.g. b(cA) = (bc)A
+Scalar-Matrix multiplication is commutative e.g. bA = Ab

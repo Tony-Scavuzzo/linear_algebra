@@ -1,0 +1,35 @@
+*** Determinants ***
+* Calculating a Determinant *
+
+For 2x2 matrices, the determinant is defined as
+
+|a b| = ac - bd
+|c d|
+
+I currently struggle to rigorously define a determinant for an nxn matrix.
+Instead, I will demonstrate by example the first step of finding the determinant of a 3x3 and 4x4 matrix.
+
+|a11 a12 a13| = a11|a22 a23| - a12|a21 a23| + a13|a21 a22|
+|a21 a22 a23|      |a32 a33|      |a31 a33|      |a31 a32|
+|a31 a32 a33|
+
+|a11 a12 a13 a14|      |a22 a23 a24|      |a21 a23 a24|      |a21 a22 a24|      |a21 a22 a23|
+|a21 a22 a23 a24| = a11|a32 a33 a34| - a12|a31 a33 a34| + a13|a31 a32 a34| - a41|a31 a32 a33|
+|a31 a32 a33 a34|      |a42 a43 a44|      |a41 a43 a44|      |a41 a42 a44|      |a41 a42 a43|
+|a41 a42 a43 a44|
+
+Firstly note that the first step of expanding an nxn determinant is to expand it to n (n-1)x(n-1) determinants.
+For this reason, nxn determinants are iteratively expanded until they have been simplified to a set of 2x2 determinants.
+Secondly, notice that the sign of each term alternates between positive and negative
+
+Another way to calculate a determinant is through the triangle property.
+For a determinant where all elements below the diagonal are zero:
+
+|a11 a12 a13 ... a1n|
+| 0  a22 a23 ... a2n|
+| 0   0  a33 ... a3n| = a11 * a22 * a33 ... * ann
+| .   .   .  ...  . |
+| 0   0   0  ... ann|
+
+By employing the properties of a determinant, a determinant may be transformed into a new determinant in triangle form
+whose relationship with the original determinant is known. This can simplify the calculation of a determinant.

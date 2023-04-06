@@ -1,0 +1,37 @@
+*** Matrix Multiplication ***
+
+For matrix A, which has dimensions of lxm, and matrix B, which has dimensions of mxn:
+
+       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1n]
+       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2n]
+   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3n]
+       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]
+       [al1 al2 al3 ... alm]       [bm1 bm2 bm3 ... bmn]
+ 
+matrix multiplication is defined as
+
+        [a11b11+a12b21+a13b31...+a1mbm1 a11b12+a12b22+a13b32...+a1mbm2 a11b13+a12b23+a13b33...+a1mbm3 ... a11b1n+a12b2n+a13b3n...+a1mbmn]
+        [a21b11+a22b21+a23b31...+a2mbm1 a21b12+a22b22+a23b32...+a2mbm2 a21b13+a22b23+a23b33...+a2mbm3 ... a21b1n+a22b2n+a23b3n...+a2mbmn]
+A * B = [a31b11+a32b21+a33b31...+a3mbm1 a31b12+a32b22+a33b32...+a3mbm2 a31b13+a32b23+a33b33...+a3mbm3 ... a31b1n+a32b2n+a33b3n...+a3mbmn]
+        [             .                              .                              .                 ...              .                ]
+        [al1b11+al2b21+al3b31...+almbm1 al1b12+al2b22+al3b32...+almbm2 al1b13+al2b23+al3b33...+almbm3 ... al1b1n+al2b2n+al3b3n...+almbmn]
+
+Note that A * B is a lxn matrix
+Note also that matrix multiplication is only defined when the width of A and the height of B are be equal.
+Another way to think of matrix multiplication is as an extension of dot products.
+If matrix A is rewritten as a collection of row vectors R1-Rl
+and matrix B is rewritten as a collection of column vectors C1-Cn
+
+       [R1]                            
+       [R2]                            
+   A = [R3]   B = [C1 C2 C3 ... Cn]
+       [ .]                            
+       [Rl]                            
+
+matrix multiplication can be described as
+
+        [R1*C1 R1*C2 R1*C3 ... R1*Cn]
+        [R2*C1 R2*C2 R2*C3 ... R2*Cn]
+A * B = [R3*C1 R3*C2 R3*C3 ... R3*Cn]
+        [  .     .     .   ...   .  ]
+        [Rl*C1 Rl*C2 Rl*C3 ... Rl*Cn]

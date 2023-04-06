@@ -1,0 +1,17 @@
+*** Dot Products ***
+
+For vectors A and B
+
+A = [a1, a2, a3, ... an]   B = [b1, b2, b3, ... bn]
+
+the dot product is defined as
+
+A * B = [a1b1 + a2b2 + a3b3 + ... anbn]
+
+where the dot product is not defined for vectors of different length.
+The dot product also satisfies the equation
+
+A * B = |A||B|cos(theta)
+
+where theta is the angle between the two vectors.
+One can consider the dot product as a special case of more general matrix multiplication.

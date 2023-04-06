@@ -1,0 +1,21 @@
+*** Matrix Addition ***
+
+For matrices A and B, which both nxm dimensions:
+
+       [a11 a12 a13 ... a1m]       [b11 b12 b13 ... b1m]
+       [a21 a22 a23 ... a2m]       [b21 b22 b23 ... b2m]
+   A = [a31 a32 a23 ... a3m]   B = [b31 b32 b33 ... b3m]
+       [ .   .   .  ...  . ]       [ .   .   .  ...  . ]
+       [an1 an2 an3 ... anm]       [bn1 bn2 bn3 ... bnm]
+ 
+matrix addition is defined as
+
+        [a11+b11 a12+b12 a13+b13 ... a1m+b1m]
+        [a21+b21 a22+b22 a23+b23 ... a2m+b2m]
+A + B = [a31+b31 a32+b32 a33+b33 ... a3m+b3m]
+        [   .       .       .    ...    .   ]
+        [an1+bn1 an2+bn2 an3+bn3 ... anm+bnm]
+
+Note that matrix addition is not defined for matrices of different dimensions
+Matrix addition is commutative e.g. A + B = B + A
+Matrix addition is associative e.g. A + (B + C) = (A + B) + C

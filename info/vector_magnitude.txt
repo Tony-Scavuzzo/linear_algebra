@@ -1,0 +1,8 @@
+*** Vector Magnitude ***
+
+The magnitude of a vector is the length of the vector,
+which can be calculated for a vector of any dimension
+The magnitude of a vector A with n dimensions is
+
+|A| = sqrt(a1^2 + a2^2 + a3^2 + ... an^2
+
